@@ -40,7 +40,7 @@
             };
 
             // Send the POST request to the Flask backend
-            fetch('/generate', {
+            fetch('https://qrcodemakerbydurjoy.onrender.com/generate', {  // Use the full backend URL here
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -51,7 +51,7 @@
             .then(blob => {
                 const qrImage = document.getElementById('qrImage');
                 qrImage.src = URL.createObjectURL(blob);
-                qrImage.style.display = 'block';
+                qrImage.style.display = 'block';  // Display the generated QR code
             })
             .catch(error => {
                 console.error('Error generating QR code:', error);
