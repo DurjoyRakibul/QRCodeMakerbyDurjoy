@@ -9,7 +9,7 @@ CORS(app)  # Enable CORS for all routes
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('qr.html')
 
 @app.route('/generate', methods=['POST'])
 def generate_qr():
