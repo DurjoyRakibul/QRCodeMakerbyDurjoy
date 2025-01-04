@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom QR Code Generator</title>
+</head>
+<body>
+    <h1>Generate Your Custom QR Code</h1>
+    <form id="qrForm">
+        <label for="data">Enter data for QR code (one per line):</label><br>
+        <textarea id="data" name="data" rows="5" cols="30" required></textarea><br><br>
+
+        <label for="fg_color">Foreground Color (Hex):</label><br>
+        <input type="text" id="fg_color" name="fg_color" value="#000000"><br><br>
+
+        <label for="bg_color">Background Color (Hex):</label><br>
+        <input type="text" id="bg_color" name="bg_color" value="#FFFFFF"><br><br>
+
+        <button type="submit">Generate QR Code</button>
+    </form>
+
+    <h2>Generated QR Code:</h2>
+    <img id="qrImage" src="" alt="QR Code will appear here" style="display: none;">
+
+    <script>
+        document.getElementById('qrForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Get the values from the form
+            const data = document.getElementById('data').value.split('\n'); // Split by newlines to create an array
+            const fgColor = document.getElementById('fg_color').value;
+            const bgColor = document.getElementById('bg_color').value;
+
+            // Prepare the data for the POST request
+            const requestData = {
+                data: data,   // Send data as an array
+                fg_color: fgColor,
+                bg_color: bgColor
+            };
+
+            // Send the POST request to the Flask backend
+            fetch('/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                const qrImage = document.getElementById('qrImage');
+                qrImage.src = URL.createObjectURL(blob);
+                qrImage.style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Error generating QR code:', error);
+            });
+        });
+    </script>
+</body>
+</html>
