@@ -40,17 +40,22 @@
             };
 
             // Send the POST request to the Flask backend
-            fetch('https://qrcodemakerbydurjoy.onrender.com/generate', {  // Ensure to use the full endpoint URL here
+            fetch('https://qrcodemakerbydurjoy.onrender.com/generate', {  // Use the full backend URL here
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(requestData)
             })
-            .then(response => response.blob())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to generate QR code');
+                }
+                return response.blob();  // Get the blob response
+            })
             .then(blob => {
                 const qrImage = document.getElementById('qrImage');
-                qrImage.src = URL.createObjectURL(blob);
+                qrImage.src = URL.createObjectURL(blob);  // Create an object URL for the blob
                 qrImage.style.display = 'block';  // Display the generated QR code
             })
             .catch(error => {
